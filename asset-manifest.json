@@ -1,0 +1,15 @@
+{
+  "files": {
+    "main.css": "/apple-calculator/static/css/main.134a6c80.css",
+    "main.js": "/apple-calculator/static/js/main.fb902c37.js",
+    "static/js/453.a9de9f51.chunk.js": "/apple-calculator/static/js/453.a9de9f51.chunk.js",
+    "index.html": "/apple-calculator/index.html",
+    "main.134a6c80.css.map": "/apple-calculator/static/css/main.134a6c80.css.map",
+    "main.fb902c37.js.map": "/apple-calculator/static/js/main.fb902c37.js.map",
+    "453.a9de9f51.chunk.js.map": "/apple-calculator/static/js/453.a9de9f51.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.134a6c80.css",
+    "static/js/main.fb902c37.js"
+  ]
+}
