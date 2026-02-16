@@ -13,6 +13,7 @@ const Calculator: React.FC = () => {
   const [history, setHistory] = useState<HistoryItem[]>([]);
   const [showHistory, setShowHistory] = useState(false);
   const [scientific, setScientific] = useState(false);
+  const [currentExpression, setCurrentExpression] = useState('');
 
   const addToHistory = (expr: string, res: string) => {
     setHistory([{ expression: expr, result: res }, ...history].slice(0, 20));
@@ -21,23 +22,44 @@ const Calculator: React.FC = () => {
   const handleNumber = (num: string) => {
     if (display === '0' || display === 'Error') {
       setDisplay(num);
+      if (previousValue && operation) {
+        setCurrentExpression(`${previousValue} ${operation} ${num}`);
+      } else {
+        setCurrentExpression(num);
+      }
     } else {
       setDisplay(display + num);
+      if (previousValue && operation) {
+        setCurrentExpression(`${previousValue} ${operation} ${display + num}`);
+      } else {
+        setCurrentExpression(display + num);
+      }
     }
   };
 
   const handleDecimal = () => {
     if (!display.includes('.')) {
-      setDisplay(display + '.');
+      const newDisplay = display + '.';
+      setDisplay(newDisplay);
+      if (previousValue && operation) {
+        setCurrentExpression(`${previousValue} ${operation} ${newDisplay}`);
+      } else {
+        setCurrentExpression(newDisplay);
+      }
     }
   };
 
   const handleOperation = (op: string) => {
-    if (previousValue !== null && operation) {
-      calculate();
+    let valueToUse = display;
+    
+    if (previousValue !== null && operation && display !== '0') {
+      const result = calculate();
+      valueToUse = result || display;
     }
-    setPreviousValue(display);
+    
+    setPreviousValue(valueToUse);
     setOperation(op);
+    setCurrentExpression(`${valueToUse} ${op} `);
     setDisplay('0');
   };
 
@@ -73,8 +95,11 @@ const Calculator: React.FC = () => {
     
     addToHistory(expr, res);
     setDisplay(res);
+    setCurrentExpression('');
     setPreviousValue(null);
     setOperation(null);
+    
+    return res;
   };
 
   const handleScientific = (func: string) => {
@@ -123,27 +148,41 @@ const Calculator: React.FC = () => {
     const res = result.toString();
     addToHistory(expr, res);
     setDisplay(res);
+    setCurrentExpression('');
   };
 
   const clear = () => {
     setDisplay('0');
+    setCurrentExpression('');
     setPreviousValue(null);
     setOperation(null);
   };
 
   const toggleSign = () => {
-    setDisplay((parseFloat(display) * -1).toString());
+    const newDisplay = (parseFloat(display) * -1).toString();
+    setDisplay(newDisplay);
+    if (previousValue && operation) {
+      setCurrentExpression(`${previousValue} ${operation} ${newDisplay}`);
+    } else {
+      setCurrentExpression(newDisplay);
+    }
   };
 
   const percentage = () => {
-    setDisplay((parseFloat(display) / 100).toString());
+    const newDisplay = (parseFloat(display) / 100).toString();
+    setDisplay(newDisplay);
+    if (previousValue && operation) {
+      setCurrentExpression(`${previousValue} ${operation} ${newDisplay}`);
+    } else {
+      setCurrentExpression(newDisplay);
+    }
   };
 
   return (
     <div className="calculator-container">
       <div className="calculator">
         <div className="display">
-          <div className="display-text">{display}</div>
+          <div className="display-text">{currentExpression || display}</div>
         </div>
 
         <div className="button-row">
